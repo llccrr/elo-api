@@ -43,90 +43,72 @@
 </head>
 <body>
 <h1>Elo Rating API</h1>
-<p>This API calculates new Elo ratings for matches with variable team sizes.</p>
+<p>Calculate Elo ratings for matches with any team size configuration.</p>
 
 <div class="endpoint">
     <h2>Endpoint</h2>
     <span class="method">POST</span> <code>/calculate</code>
 </div>
 
-<h2>Parameters</h2>
+<h2>Request Format</h2>
 <pre>
 {
-    "teams": number[][],  // Array of arrays containing players' Elo ratings
-    "winner": number,     // Index of winning team (0, 1, 2, etc.)
-    "k": number          // Optional: K-factor (default: 32)
+    "players": [
+        { "rating": number, "k": number, "team": number },
+        ...
+    ],
+    "winner": number  // Index of winning team
 }</pre>
 
-<h2>Usage Examples</h2>
+<h2>Examples</h2>
 
 <h3>1. 1v1 Match</h3>
 <pre>
 // Request
-POST /calculate
 {
-    "teams": [[1200], [1400]],
+    "players": [
+        { "rating": 1200, "k": 32, "team": 0 },
+        { "rating": 1400, "k": 16, "team": 1 }
+    ],
     "winner": 0
 }
 
 // Response
 {
-    "newRatings": [[1227], [1373]],
-    "changes": [[+27], [-27]]
+    "players": [
+        { "rating": 1200, "k": 32, "team": 0, "newRating": 1227, "ratingChange": 27 },
+        { "rating": 1400, "k": 16, "team": 1, "newRating": 1373, "ratingChange": -27 }
+    ]
 }</pre>
 
 <h3>2. 2v2 Match</h3>
 <pre>
 // Request
-POST /calculate
 {
-    "teams": [[1200, 1300], [1400, 1500]],
+    "players": [
+        { "rating": 1200, "k": 32, "team": 0 },
+        { "rating": 1300, "k": 32, "team": 0 },
+        { "rating": 1400, "k": 16, "team": 1 },
+        { "rating": 1500, "k": 16, "team": 1 }
+    ],
     "winner": 1
-}
-
-// Response
-{
-    "newRatings": [[1178, 1278], [1422, 1522]],
-    "changes": [[-22, -22], [+22, +22]]
 }</pre>
 
-<h3>3. Asymmetric Match (1v2)</h3>
-<pre>
-// Request
-POST /calculate
-{
-    "teams": [[2000], [1400, 1600]],
-    "winner": 0
-}</pre>
-
-<h2>Using with cURL</h2>
-<pre>
-curl -X POST https://your-api.vercel.app/calculate \
--H "Content-Type: application/json" \
--d '{"teams":[[1200],[1400]],"winner":0}'</pre>
-
-<h2>The K-factor</h2>
-<p>The K-factor determines how much ratings change after each game:</p>
+<h2>K-factor Guidelines</h2>
 <ul>
-    <li>K = 32: Default value</li>
-    <li>K = 16: For experienced players (smaller rating changes)</li>
-    <li>K = 64: For beginners (larger rating changes)</li>
+    <li>New players: K = 40 (faster rating adjustments)</li>
+    <li>Regular players: K = 32</li>
+    <li>Experienced players: K = 24</li>
+    <li>Elite players: K = 16</li>
+    <li>Top players: K = 10 (slower rating adjustments)</li>
 </ul>
 
-<h2>Additional Information</h2>
+<h2>Validation</h2>
 <ul>
-    <li>All teams must have at least one player</li>
-    <li>You need at least two teams</li>
-    <li>Winner index must be valid (0 to number of teams - 1)</li>
-    <li>Ratings are always rounded to integers</li>
-</ul>
-
-<h2>Error Handling</h2>
-<p>The API will return a 400 status code with an error message if:</p>
-<ul>
-    <li>The request body is invalid</li>
-    <li>There are fewer than 2 teams</li>
-    <li>The winner index is invalid</li>
+    <li>At least 2 players required</li>
+    <li>Players must be from at least 2 different teams</li>
+    <li>Each player must have rating, k, and team values</li>
+    <li>Winner index must be valid</li>
 </ul>
 
 </body>
