@@ -1,8 +1,15 @@
+// api/index.js
 const express = require('express');
 const { calculateEloChanges } = require('../elo');
+const path = require('path');
 
 const app = express();
 app.use(express.json());
+
+// Servir la page HTML de documentation à la racine
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public/index.html'));
+});
 
 app.post('/calculate', (req, res) => {
     try {

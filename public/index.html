@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API de Calcul Elo</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        pre {
+            background: #f6f8fa;
+            padding: 16px;
+            border-radius: 6px;
+            overflow-x: auto;
+        }
+        code {
+            background: #f6f8fa;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+        .endpoint {
+            background: #e3f2fd;
+            padding: 16px;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+        h1 { color: #1a73e8; }
+        h2 { color: #2c5282; }
+        .method {
+            background: #4caf50;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<h1>API de Calcul Elo</h1>
+<p>Cette API permet de calculer les nouveaux scores Elo pour des matchs avec un nombre variable de joueurs par équipe.</p>
+
+<div class="endpoint">
+    <h2>Endpoint</h2>
+    <span class="method">POST</span> <code>/calculate</code>
+</div>
+
+<h2>Paramètres</h2>
+<pre>
+{
+    "teams": number[][],  // Tableau de tableaux contenant les scores Elo des joueurs
+    "winner": number,     // Index de l'équipe gagnante (0, 1, 2, etc.)
+    "k": number          // Optionnel: Facteur K (défaut: 32)
+}</pre>
+
+<h2>Exemples d'utilisation</h2>
+
+<h3>1. Match 1v1</h3>
+<pre>
+// Requête
+POST /calculate
+{
+    "teams": [[1200], [1400]],
+    "winner": 0
+}
+
+// Réponse
+{
+    "newRatings": [[1227], [1373]],
+    "changes": [[+27], [-27]]
+}</pre>
+
+<h3>2. Match 2v2</h3>
+<pre>
+// Requête
+POST /calculate
+{
+    "teams": [[1200, 1300], [1400, 1500]],
+    "winner": 1
+}
+
+// Réponse
+{
+    "newRatings": [[1178, 1278], [1422, 1522]],
+    "changes": [[-22, -22], [+22, +22]]
+}</pre>
+
+<h3>3. Match asymétrique (1v2)</h3>
+<pre>
+// Requête
+POST /calculate
+{
+    "teams": [[2000], [1400, 1600]],
+    "winner": 0
+}</pre>
+
+<h2>Utilisation avec cURL</h2>
+<pre>
+curl -X POST https://votre-api.vercel.app/calculate \
+-H "Content-Type: application/json" \
+-d '{"teams":[[1200],[1400]],"winner":0}'</pre>
+
+<h2>Le facteur K</h2>
+<p>Le facteur K détermine l'ampleur des changements de score :</p>
+<ul>
+    <li>K = 32 : Valeur par défaut</li>
+    <li>K = 16 : Pour les joueurs expérimentés (changements plus faibles)</li>
+    <li>K = 64 : Pour les débutants (changements plus importants)</li>
+</ul>
+
+</body>
+</html>
