@@ -1,3 +1,54 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>Elo Rating API</title>-->
+<!--    <style>-->
+<!--        body {-->
+<!--            font-family: system-ui, -apple-system, sans-serif;-->
+<!--            line-height: 1.6;-->
+<!--            max-width: 800px;-->
+<!--            margin: 0 auto;-->
+<!--            padding: 20px;-->
+<!--            color: #333;-->
+<!--        }-->
+<!--        pre {-->
+<!--            background: #f6f8fa;-->
+<!--            padding: 16px;-->
+<!--            border-radius: 6px;-->
+<!--            overflow-x: auto;-->
+<!--        }-->
+<!--        code {-->
+<!--            background: #f6f8fa;-->
+<!--            padding: 2px 4px;-->
+<!--            border-radius: 4px;-->
+<!--        }-->
+<!--        .endpoint {-->
+<!--            background: #e3f2fd;-->
+<!--            padding: 16px;-->
+<!--            border-radius: 6px;-->
+<!--            margin: 20px 0;-->
+<!--        }-->
+<!--        h1 { color: #1a73e8; }-->
+<!--        h2 { color: #2c5282; }-->
+<!--        .method {-->
+<!--            background: #4caf50;-->
+<!--            color: white;-->
+<!--            padding: 4px 8px;-->
+<!--            border-radius: 4px;-->
+<!--            font-weight: bold;-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+
+
+<!--</body>-->
+<!--</html>-->
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -39,19 +90,113 @@
             border-radius: 4px;
             font-weight: bold;
         }
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #e2e8f0;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 16px;
+        }
+        .tab.active {
+            border-bottom: 2px solid #1a73e8;
+            margin-bottom: -2px;
+            color: #1a73e8;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .test-form {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .test-form input, .test-form select, .test-form button {
+            margin: 8px 0;
+            padding: 8px;
+            border: 1px solid #cbd5e0;
+            border-radius: 4px;
+        }
+        .test-form button {
+            background: #1a73e8;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            cursor: pointer;
+        }
+        .test-form button:hover {
+            background: #1557b0;
+        }
+        .player-list {
+            margin: 10px 0;
+            padding: 10px;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+        }
+        .player-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .player-item:last-child {
+            border-bottom: none;
+        }
+        .remove-player {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .remove-player:hover {
+            background: #dc2626;
+        }
+        #response {
+            margin-top: 20px;
+            white-space: pre-wrap;
+        }
+        .test-form label {
+            display: block;
+            margin-bottom: 4px;
+            font-weight: 500;
+            color: #4a5568;
+        }
+
+        .test-form input {
+            width: 100px;
+        }
     </style>
 </head>
 <body>
-<h1>Elo Rating API</h1>
-<p>Calculate Elo ratings for matches with any team size configuration.</p>
-
-<div class="endpoint">
-    <h2>Endpoint</h2>
-    <span class="method">POST</span> <code>/calculate</code>
+<div class="tabs">
+    <button class="tab active" onclick="switchTab('documentation')">Documentation</button>
+    <button class="tab" onclick="switchTab('tester')">API Tester</button>
 </div>
 
-<h2>Request Format</h2>
-<pre>
+<div id="documentation" class="tab-content active">
+    <!-- Previous documentation content here -->
+    <h1>Elo Rating API</h1>
+    <p>Calculate Elo ratings for matches with any team size configuration.</p>
+
+    <div class="endpoint">
+        <h2>Endpoint</h2>
+        <span class="method">POST</span> <code>/calculate</code>
+    </div>
+
+    <h2>Request Format</h2>
+    <pre>
 {
     "players": [
         { "rating": number, "k": number, "team": number },
@@ -60,10 +205,10 @@
     "winner": number  // Index of winning team
 }</pre>
 
-<h2>Examples</h2>
+    <h2>Examples</h2>
 
-<h3>1. 1v1 Match</h3>
-<pre>
+    <h3>1. 1v1 Match</h3>
+    <pre>
 // Request
 {
     "players": [
@@ -81,8 +226,8 @@
     ]
 }</pre>
 
-<h3>2. 2v2 Match</h3>
-<pre>
+    <h3>2. 2v2 Match</h3>
+    <pre>
 // Request
 {
     "players": [
@@ -94,22 +239,133 @@
     "winner": 1
 }</pre>
 
-<h2>K-factor Guidelines</h2>
-<ul>
-    <li>New players: K = 40 (faster rating adjustments)</li>
-    <li>Regular players: K = 32</li>
-    <li>Experienced players: K = 24</li>
-    <li>Elite players: K = 16</li>
-    <li>Top players: K = 10 (slower rating adjustments)</li>
-</ul>
+    <h2>K-factor Guidelines</h2>
+    <ul>
+        <li>New players: K = 40 (faster rating adjustments)</li>
+        <li>Regular players: K = 32</li>
+        <li>Experienced players: K = 24</li>
+        <li>Elite players: K = 16</li>
+        <li>Top players: K = 10 (slower rating adjustments)</li>
+    </ul>
 
-<h2>Validation</h2>
-<ul>
-    <li>At least 2 players required</li>
-    <li>Players must be from at least 2 different teams</li>
-    <li>Each player must have rating, k, and team values</li>
-    <li>Winner index must be valid</li>
-</ul>
+    <h2>Validation</h2>
+    <ul>
+        <li>At least 2 players required</li>
+        <li>Players must be from at least 2 different teams</li>
+        <li>Each player must have rating, k, and team values</li>
+        <li>Winner index must be valid</li>
+    </ul>
+</div>
 
+<div id="tester" class="tab-content">
+    <h1>Test the API</h1>
+    <div class="test-form">
+        <h3>Add Player</h3>
+        <div style="display: flex; gap: 10px; align-items: flex-end;">
+            <div>
+                <label for="rating">Elo</label>
+                <input type="number" id="rating" placeholder="Rating" value="1200">
+            </div>
+            <div>
+                <label for="kFactor">K</label>
+                <input type="number" id="kFactor" placeholder="K Factor" value="32">
+            </div>
+            <div>
+                <label for="team">Team</label>
+                <input type="number" id="team" placeholder="Team Number" value="0">
+            </div>
+            <button onclick="addPlayer()">Add Player</button>
+        </div>
+
+        <h3>Current Players</h3>
+        <div id="playerList" class="player-list">
+            <!-- Players will be added here -->
+        </div>
+
+        <h3>Match Result</h3>
+        <div>
+            <select id="winner">
+                <option value="0">Team 0 wins</option>
+                <option value="1">Team 1 wins</option>
+            </select>
+            <button onclick="calculateElo()">Calculate New Ratings</button>
+        </div>
+
+        <h3>Result</h3>
+        <pre id="response"></pre>
+    </div>
+</div>
+
+<script>
+    let players = [];
+
+    function switchTab(tabName) {
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+        document.getElementById(tabName).classList.add('active');
+        document.querySelector(`button[onclick="switchTab('${tabName}')"]`).classList.add('active');
+    }
+
+    function addPlayer() {
+        const rating = parseInt(document.getElementById('rating').value);
+        const k = parseInt(document.getElementById('kFactor').value);
+        const team = parseInt(document.getElementById('team').value);
+
+        players.push({ rating, k, team });
+        updatePlayerList();
+        updateWinnerOptions();
+    }
+
+    function removePlayer(index) {
+        players.splice(index, 1);
+        updatePlayerList();
+        updateWinnerOptions();
+    }
+
+    function updatePlayerList() {
+        const playerList = document.getElementById('playerList');
+        playerList.innerHTML = players.map((player, index) => `
+                <div class="player-item">
+                    <span>Rating: ${player.rating}, K: ${player.k}, Team: ${player.team}</span>
+                    <button class="remove-player" onclick="removePlayer(${index})">Remove</button>
+                </div>
+            `).join('');
+    }
+
+    function updateWinnerOptions() {
+        const teams = [...new Set(players.map(p => p.team))];
+        const winnerSelect = document.getElementById('winner');
+        winnerSelect.innerHTML = teams.map(team =>
+            `<option value="${team}">Team ${team} wins</option>`
+        ).join('');
+    }
+
+    async function calculateElo() {
+        if (players.length < 2) {
+            document.getElementById('response').textContent = 'Need at least 2 players from different teams';
+            return;
+        }
+
+        const winner = parseInt(document.getElementById('winner').value);
+        const request = {
+            players,
+            winner
+        };
+
+        try {
+            const response = await fetch('/calculate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(request)
+            });
+            const data = await response.json();
+            document.getElementById('response').textContent = JSON.stringify(data, null, 2);
+        } catch (error) {
+            document.getElementById('response').textContent = 'Error: ' + error.message;
+        }
+    }
+</script>
 </body>
 </html>
