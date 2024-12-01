@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>API de Calcul Elo</title>
+    <title>Elo Rating API</title>
     <style>
         body {
             font-family: system-ui, -apple-system, sans-serif;
@@ -42,75 +42,91 @@
     </style>
 </head>
 <body>
-<h1>API de Calcul Elo</h1>
-<p>Cette API permet de calculer les nouveaux scores Elo pour des matchs avec un nombre variable de joueurs par équipe.</p>
+<h1>Elo Rating API</h1>
+<p>This API calculates new Elo ratings for matches with variable team sizes.</p>
 
 <div class="endpoint">
     <h2>Endpoint</h2>
     <span class="method">POST</span> <code>/calculate</code>
 </div>
 
-<h2>Paramètres</h2>
+<h2>Parameters</h2>
 <pre>
 {
-    "teams": number[][],  // Tableau de tableaux contenant les scores Elo des joueurs
-    "winner": number,     // Index de l'équipe gagnante (0, 1, 2, etc.)
-    "k": number          // Optionnel: Facteur K (défaut: 32)
+    "teams": number[][],  // Array of arrays containing players' Elo ratings
+    "winner": number,     // Index of winning team (0, 1, 2, etc.)
+    "k": number          // Optional: K-factor (default: 32)
 }</pre>
 
-<h2>Exemples d'utilisation</h2>
+<h2>Usage Examples</h2>
 
-<h3>1. Match 1v1</h3>
+<h3>1. 1v1 Match</h3>
 <pre>
-// Requête
+// Request
 POST /calculate
 {
     "teams": [[1200], [1400]],
     "winner": 0
 }
 
-// Réponse
+// Response
 {
     "newRatings": [[1227], [1373]],
     "changes": [[+27], [-27]]
 }</pre>
 
-<h3>2. Match 2v2</h3>
+<h3>2. 2v2 Match</h3>
 <pre>
-// Requête
+// Request
 POST /calculate
 {
     "teams": [[1200, 1300], [1400, 1500]],
     "winner": 1
 }
 
-// Réponse
+// Response
 {
     "newRatings": [[1178, 1278], [1422, 1522]],
     "changes": [[-22, -22], [+22, +22]]
 }</pre>
 
-<h3>3. Match asymétrique (1v2)</h3>
+<h3>3. Asymmetric Match (1v2)</h3>
 <pre>
-// Requête
+// Request
 POST /calculate
 {
     "teams": [[2000], [1400, 1600]],
     "winner": 0
 }</pre>
 
-<h2>Utilisation avec cURL</h2>
+<h2>Using with cURL</h2>
 <pre>
-curl -X POST https://votre-api.vercel.app/calculate \
+curl -X POST https://your-api.vercel.app/calculate \
 -H "Content-Type: application/json" \
 -d '{"teams":[[1200],[1400]],"winner":0}'</pre>
 
-<h2>Le facteur K</h2>
-<p>Le facteur K détermine l'ampleur des changements de score :</p>
+<h2>The K-factor</h2>
+<p>The K-factor determines how much ratings change after each game:</p>
 <ul>
-    <li>K = 32 : Valeur par défaut</li>
-    <li>K = 16 : Pour les joueurs expérimentés (changements plus faibles)</li>
-    <li>K = 64 : Pour les débutants (changements plus importants)</li>
+    <li>K = 32: Default value</li>
+    <li>K = 16: For experienced players (smaller rating changes)</li>
+    <li>K = 64: For beginners (larger rating changes)</li>
+</ul>
+
+<h2>Additional Information</h2>
+<ul>
+    <li>All teams must have at least one player</li>
+    <li>You need at least two teams</li>
+    <li>Winner index must be valid (0 to number of teams - 1)</li>
+    <li>Ratings are always rounded to integers</li>
+</ul>
+
+<h2>Error Handling</h2>
+<p>The API will return a 400 status code with an error message if:</p>
+<ul>
+    <li>The request body is invalid</li>
+    <li>There are fewer than 2 teams</li>
+    <li>The winner index is invalid</li>
 </ul>
 
 </body>
