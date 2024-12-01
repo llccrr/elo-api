@@ -13,7 +13,7 @@ GET /
 
 - Calculate Elo ratings for any number of teams
 - Support for asymmetric teams (1v2, 2v3, etc.)
-- Configurable K-factor
+- Individual K-factor for each player
 - Simple JSON API
 - Documentation page included
 
@@ -30,9 +30,11 @@ POST /calculate    # Calculate new Elo ratings
 
 ```json
 {
-  "teams": [[1200], [1400]],
-  "winner": 0,
-  "k": 32
+    "players": [
+        { "rating": 1200, "k": 32, "team": 0 },
+        { "rating": 1400, "k": 16, "team": 1 }
+    ],
+    "winner": 0
 }
 ```
 
@@ -40,8 +42,10 @@ POST /calculate    # Calculate new Elo ratings
 
 ```json
 {
-  "newRatings": [[1227], [1373]],
-  "changes": [[+27], [-27]]
+    "players": [
+        { "rating": 1200, "k": 32, "team": 0, "newRating": 1227, "ratingChange": 27 },
+        { "rating": 1400, "k": 16, "team": 1, "newRating": 1373, "ratingChange": -27 }
+    ]
 }
 ```
 
